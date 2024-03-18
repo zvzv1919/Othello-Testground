@@ -1,0 +1,5 @@
+numpy
+Gymnasium
+setuptools
+scipy
+pandas
