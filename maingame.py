@@ -1,16 +1,21 @@
 import sys
 
 from utils import Board, LibC
-from players.player import RandomPlayer, EdaxPlayer
+from players.player import RandomPlayer
+from players.edax_player import EdaxPlayer
+import time
+from multiprocessing import Process, Array
 
-def playGame(players):
+def playGame(players, wincount):
     libc = LibC()
     board = Board(0,0)
     libc.board_init(board)
     libc.board_print(board)
     moves = libc.get_moves(board.player, board.opponent)
-    print('{0:x}'.format(moves))
-
+    tmp = []
+    for player, name in players:
+        tmp.append(globals()[player](name))
+    players = tmp
 
     # main loop
     current_player = 0
@@ -21,17 +26,12 @@ def playGame(players):
         # update board, not using OOP bc edax is in C
         if move == -1:
             libc.board_swap_players(board)
-            print("pass", file=sys.stderr)
         else:
             libc.board_update(board, move, board) # this implicitly swaps the player, might not be wanted
 
         # update current_player
         current_player = 1 - current_player
         libc.board_print(board, player_color=current_player)
-        print(current_player, file=sys.stderr)
-
-        # libc.board_swap_players(board)
-        # time.sleep(1)
 
     # These should be put to analyze and become optional
     cnts = [0,0]
@@ -41,21 +41,36 @@ def playGame(players):
     cnts[1-current_player] = opponent_cnt
     winner = 0
     if cnts[winner] == cnts[1-winner]:
+        wincount[2] += 1
         print("draw!!")
-        return cnts
+        return cnts, 2
     if cnts[winner] < cnts[1-winner]:
         winner = 1-winner
     print(players[winner].name + " wins!!")
+    wincount[winner] += 1
     return cnts, winner
 
 if __name__ == '__main__':
-    players = [EdaxPlayer("edax player zx"), RandomPlayer("rand player fe")]
-    win_cnt = 0
-    total_games = 10
+    start = time.time()
+    win_cnt = Array('i', [0,0,0])
+    total_games = 15
+    # Pass players in tuples ({class_name}, [{initialization_vars}]) so that they can be pickled
+    players = [("EdaxPlayer", "edax player fe"), ("EdaxPlayer", "edax player zx")]
+
+    processes = []
     for i in range(total_games):
-        players = [EdaxPlayer("edax player zx"), RandomPlayer("rand player fe")]
-        _, winner = playGame(players)
-        if winner == 0:
-            win_cnt += 1
-    print('{} wins {}/{} games!'.format(players[0].name, win_cnt, total_games))
+        p = Process(target=playGame, args=[players, win_cnt])
+        processes.append(p)
+        p.start()
+        # _, winner = playGame(players)
+        # win_cnt[winner] += 1
+    for p in processes:
+        p.join()
+
+    print('{} wins {}/{} games!'.format(players[0][1], win_cnt[0], total_games))
+    print('{} wins {}/{} games!'.format(players[1][1], win_cnt[1], total_games))
+    print('Draw {}/{} games!'.format(win_cnt[2], total_games))
+    end = time.time()
+    print(f"Time: {end - start:.6f} seconds")
+
 
