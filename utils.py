@@ -13,6 +13,9 @@ class Board(ctypes.Structure):
         self.player = player
         self.opponent = opponent
 
+    def __eq__(self, other):
+        return self.opponent == other.opponent and self.player == other.player
+
 class LibC():
     # py-C interface
     def __init__(self):
