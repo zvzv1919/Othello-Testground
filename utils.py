@@ -20,7 +20,7 @@ class LibC():
     # py-C interface
     def __init__(self):
         # If restype not explicitly set, cdll will truncate a returning int64 to int8
-        self.libc = cdll.LoadLibrary('./edax_so/edax.so')
+        self.libc = cdll.LoadLibrary('/Users/xuan.zhao/Documents/GitHub/Othello-Testground/edax_so/edax.so')
         self.libc.get_moves.argtypes=[ctypes.c_ulonglong, ctypes.c_ulonglong]
         self.libc.get_moves.restype=ctypes.c_ulonglong
         self.libc.get_stderr.restype=ctypes.c_int64

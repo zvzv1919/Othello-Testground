@@ -332,7 +332,7 @@ help:
 
 build:
 	@echo "building edax..."
-	$(CC) $(CFLAGS) all.c -o $(BIN)/$(EXE) $(LIBS)
+	$(CC) $(CFLAGS) all.c -g -o $(BIN)/$(EXE) $(LIBS)
 
 build-so:
 	@echo "building edax shared library..."

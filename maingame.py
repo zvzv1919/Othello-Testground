@@ -3,6 +3,7 @@ import sys
 from utils import Board, LibC
 from players.player import RandomPlayer
 from players.edax_player import EdaxPlayer
+from players.edax_player_solve import EdaxPlayerSolve
 import time
 from multiprocessing import Process, Array
 
@@ -12,6 +13,8 @@ def playGame(players, wincount):
     libc.board_init(board)
     libc.board_print(board)
     moves = libc.get_moves(board.player, board.opponent)
+    print(board.player)
+    print(board.opponent)
     tmp = []
     for player, name in players:
         tmp.append(globals()[player](name))
@@ -53,9 +56,9 @@ def playGame(players, wincount):
 if __name__ == '__main__':
     start = time.time()
     win_cnt = Array('i', [0,0,0])
-    total_games = 15
+    total_games = 1
     # Pass players in tuples ({class_name}, [{initialization_vars}]) so that they can be pickled
-    players = [("EdaxPlayer", "edax player fe"), ("EdaxPlayer", "edax player zx")]
+    players = [("EdaxPlayer", "edax player fe"), ("EdaxPlayerSolve", "edax solve player zx")]
 
     processes = []
     for i in range(total_games):
