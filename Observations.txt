@@ -1,0 +1,4 @@
+White player seems to have an edge at shallow search depth (<10), while black has an edge for deep search depth, according to self-match results between 2 edax players. White_Edax_8 beats Black_Edax_8 15/0/0, Black_Edax_10 13/2/0, only lose to Black_Edax_11 0/14/1. Black_Edax_15 beats White_Edax_15 15/0/0, White_Edax_18 7/0/8, only lose to White_Edax_20 3/9/3. This might be due to identical openings though.
+
+Self match performance: ~0.25s/match for 2 lvl 5 edax players, ~1s/match for 2 lvl 10 edax players
+

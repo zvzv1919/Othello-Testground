@@ -3,6 +3,7 @@ import random
 import subprocess
 import utils
 import sys
+import re
 
 '''
     board - struct of two uint64, player and opponent
@@ -31,8 +32,73 @@ def moveToCoord(move):
     res = str(chr(ord('a')+(move%8)) + str(1 + (move//8)))
     return res
 
+def get_moves(player, opponent):
+    mask = opponent & 0x7E7E7E7E7E7E7E7E
+    a1 = get_some_moves(player, mask, 1)
+    a2 = get_some_moves(player, opponent, 8)
+    a3 = get_some_moves(player, mask, 7)
+    a4 = get_some_moves(player, mask, 9)
+    empty_bb = (player | opponent) ^ 0xFFFFFFFFFFFFFFFF
+    return (a1 | a2 | a3 | a4) & empty_bb
+
+def get_some_moves(bb, mask, direction):
+    # 1-stage Parallel Prefix (intermediate between kogge stone & sequential)
+    # 6 << + 6 >> + 7 | + 10 &
+    direction2 = direction + direction
+    flip_l = mask & (bb << direction)
+    flip_r = mask & (bb >> direction)
+    flip_l |= mask & (flip_l << direction)
+    flip_r |= mask & (flip_r >> direction)
+    mask_l = mask & (mask << direction)
+    mask_r = mask & (mask >> direction)
+    flip_l |= mask_l & (flip_l << direction2)
+    flip_r |= mask_r & (flip_r >> direction2)
+    flip_l |= mask_l & (flip_l << direction2)
+    flip_r |= mask_r & (flip_r >> direction2)
+    return (flip_l << direction) | (flip_r >> direction)
+
+def obf_to_bitboards(s):
+    assert re.fullmatch(r"[-OX]{64}\s[OX];", s) is not None
+    player = 0
+    opponent = 0
+    for i in range(64):
+        if s[i] == s[65]:
+            player += 1 << i
+        elif s[i] != "-":
+            opponent += 1 << i
+    return (player, opponent)
+
+def print_obf(obf: str) -> None:
+    player, opponent = obf_to_bitboards(obf)
+    bb_moves = get_moves(player, opponent)
+    if bb_moves == 0:
+        assert get_moves(opponent, player) == 0
+    assert ((player | opponent) & bb_moves) == 0
+    print("  A B C D E F G H")
+    for i in range(8):
+        line = f"{i+1} "
+        for j in range(8):
+            line += obf[i * 8 + j] if (bb_moves & (1 << (i * 8 + j))) == 0 else "."
+            line += " "
+        suffix = ""
+        if i == 1:
+            suffix = f" {obf[65]} to move" if bb_moves > 0 else " game is end."
+        elif i == 3:
+            suffix = f" O: discs = {str(obf[:64].count('O')).rjust(2)}"
+        elif i == 4:
+            suffix = f" X: discs = {str(obf[:64].count('X')).rjust(2)}"
+        elif i == 5:
+            suffix = f"  empties = {str(obf[:64].count('-')).rjust(2)}"
+        print(line + str(i + 1) + suffix)
+    print("  A B C D E F G H")
+
 class EdaxPlayer:
-    def __init__(self, name, options=[]):
+
+    '''
+        Options (see edax doc for ref):
+        -l: level
+    '''
+    def __init__(self, name, *args):
         self.libc = utils.LibC()
         self.name = name
         self.process = None # Will be initiated during the first call to get_move, depending on the color of this player
@@ -40,11 +106,11 @@ class EdaxPlayer:
         self.board = utils.Board(0,0)
         self.libc.board_init(self.board)
         self.last_edax_move = None
-        self.options = options
+        self.options = list(args)
         if name == "edax player fe":
-            self.options = ['-l', '20', '-game-file', 'gamefile.txt', '-search-log-file', 'searchlog.txt']
+            self.options = ['-l', '30', '-game-file', 'gamefile.txt', '-search-log-file', 'searchlog.txt']
         if name == "edax player zx":
-            self.options = ['-l', '21']
+            self.options = ['-l', '8']
 
     def read_edax_move(self):
         edax_move = -1
@@ -115,8 +181,9 @@ class EdaxPlayer:
         return edax_move
 
 if __name__ == '__main__':
-    print('{}'.format(coordToMove('a1')))
-    print(moveToCoord(0))
+    # print('{}'.format(coordToMove('a1')))
+    # print(moveToCoord(0))
+    print_obf("------------O------OOX-----XOX----XXOO----XO-O------------------ X;")
 
 
 
