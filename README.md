@@ -24,6 +24,18 @@ Eval net training: consume from `derived_states`
 2. Organize C library functions into a class so that the library only needs to be load once
 3. Use `cython` compilation instead of `ctypes` between python and C code
 4. Use [Zobrist Hashing](https://en.wikipedia.org/wiki/Zobrist_hashing) for compact gameboard representation
+5. Modify edax to output csv file so loading solution file can be faster with numpy.
+
+## Observations
+1. White player seems to have an edge at shallow search depth (<10), while black has an edge for deep search depth, according to self-match results between 2 edax players. White_Edax_8 beats Black_Edax_8 15/0/0, Black_Edax_10 13/2/0, only lose to Black_Edax_11 0/14/1. Black_Edax_15 beats White_Edax_15 15/0/0, White_Edax_18 7/0/8, only lose to White_Edax_20 3/9/3. This might be due to identical openings though.
+2. Self match performance: ~0.25s/match for 2 lvl 5 edax players, ~1s/match for 2 lvl 10 edax players
+3. Single-process call of random_obf takes 0.5s to generate 10k entries.
+4. Multi-process call of random_obf takes 107s for 10M entries
+5. Edax takes 5 mins to evaluate 10k positions at level 16 on 8 core i9.
+6. Vanilla Google Colab takes ~1s to load and plot 10k entries
+7. Edax original eval function fit for randomly generated states as follows, doesn't seem to have optimized against positivity: ![Edax_eval.png](resources/Edax_eval.png)
+8. 
+
 
 ## Known Issues
 1. Sometimes game result has less aggregated games than total games![Wrong Game result.png](resources%2FWrong%20Game%20result.png)

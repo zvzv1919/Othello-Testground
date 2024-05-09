@@ -1,5 +1,6 @@
 import ctypes
 from ctypes import cdll
+import time
 import numpy as np
 
 # Use Clib class if loading library becomes a performance issue
@@ -73,3 +74,17 @@ def board_init(Board):
 
 def global_init():
     print("hello from global init")
+
+def timer(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"{func.__name__} Time: {end - start:.6f} seconds")
+        if len(args) > 0:
+            print(f"args: {args}")
+        if len(kwargs) > 0:
+            print(f"kwargs: {kwargs}")
+        print("====================================================")
+        return result
+    return wrapper
