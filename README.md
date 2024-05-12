@@ -34,8 +34,8 @@ Eval net training: consume from `derived_states`
 5. Edax takes 5 mins to evaluate 10k positions at level 16 on 8 core i9.
 6. Vanilla Google Colab takes ~1s to load and plot 10k entries
 7. Edax original eval function fit for randomly generated states as follows, doesn't seem to have optimized against positivity: ![Edax_eval.png](resources/Edax_eval.png)
-8. 
-
+8. Draws are rare (~3%) and trained classification model will predict extremely low probability for draws, resulting in 0/20000 predicted in a test sample: ![Prediction_density_20240509.png](resources/Prediction_density_20240509.png)
+9. Edax CPU usage seems to be capped at 300% on 
 
 ## Known Issues
 1. Sometimes game result has less aggregated games than total games![Wrong Game result.png](resources%2FWrong%20Game%20result.png)

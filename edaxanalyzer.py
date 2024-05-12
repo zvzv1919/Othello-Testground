@@ -3,6 +3,7 @@ import timeit
 import numpy as np
 import re
 import subprocess
+import os
 from utils import timer
 from multiprocessing import Process, Queue
 
@@ -116,6 +117,9 @@ def file_writer(q, file_path):
         :param q: mp/mt queue
         :return:
     """
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
     with open(file_path, 'w') as f:
         while True:
             data = q.get()
@@ -186,7 +190,7 @@ def analyze_obf_entry(obf_entry, lvl):
     print(analyze["score"])
 
 if __name__ == '__main__':
-    random_obf(16, 1000000, "test_obf_16_1M_20240509")
+    random_obf(21, 100000, "data/21_100k_20240512/obf")
 
     # extract_scores("a.txt")
     # analyze_obf_entry("X-OOOOXOO--OO--OX-XOXXXXXO--XO-OOOX---OO--OO-OOOXXOOOOXXXOXXO-XX X;", 16)

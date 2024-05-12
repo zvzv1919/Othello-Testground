@@ -2,3 +2,4 @@ White player seems to have an edge at shallow search depth (<10), while black ha
 
 Self match performance: ~0.25s/match for 2 lvl 5 edax players, ~1s/match for 2 lvl 10 edax players
 
+Single-threaded

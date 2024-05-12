@@ -318,9 +318,9 @@ void options_bound(void)
 	}
 
 	if (options.name == NULL) options.name = string_duplicate(EDAX_NAME);
-	if (options.game_file == NULL) options.game_file = string_duplicate("data/game.ggf");
-	if (options.eval_file == NULL) options.eval_file = string_duplicate("data/eval.dat");
-	if (options.book_file == NULL) options.book_file = string_duplicate("data/book.dat");
+	if (options.game_file == NULL) options.game_file = string_duplicate("edax_data/game.ggf");
+	if (options.eval_file == NULL) options.eval_file = string_duplicate("edax_data/eval.dat");
+	if (options.book_file == NULL) options.book_file = string_duplicate("edax_data/book.dat");
 }
 
 /**
