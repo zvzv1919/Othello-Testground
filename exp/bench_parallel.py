@@ -30,7 +30,7 @@ def job_power():
     return result
 
 def job_add(a):
-    for i in range(3000000):
+    for i in range(30000000):
         a[0] += 1
 
 
@@ -75,11 +75,11 @@ if __name__ == '__main__':
     # multiprocessing(job_power, rep=32) #2s with rep == 32, 0.5s with rep <= 8
     # concurrentfuture(job_power_param, rep=32) #1.7s with rep == 32
     a = [0]
-    sequential(job_add, a, rep = 8)
+    sequential(job_add, a, rep = 32)
     print(a)
     a = [0]
-    multithreading(job_add, a, rep = 8)
+    multithreading(job_add, a, rep = 32)
     print(a)
     a = [0]
-    multiprocessing(job_add, a, rep = 8)
+    multiprocessing(job_add, a, rep = 32)
     print(a)
