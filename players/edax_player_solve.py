@@ -212,8 +212,10 @@ if __name__ == '__main__':
     # print('{}'.format(coordToMove('a1')))
     # print(moveToCoord(0))
     print_obf("------------O------OOX-----XOX----XXOO----XO-O------------------ X;")
-    print(bitboards_to_obf(34628173824, 68853694464))
+    print(bitboards_to_obf(0x317d453b069dc01d, 0xcc02bac0f9423ee2))
     utils.LibC().board_print(obf_to_bitboards("------------O------OOX-----XOX----XXOO----XO-O------------------ X;"))
+    board = obf_to_bitboards("XOXXXOOO-OOOOOXXXOXXX-OXOXXOOOOOXX-XXXOOXOXOOOXOXOXXXXX-X-OOXXOO X;")
+    print(board.player, board.opponent)
 
 
 

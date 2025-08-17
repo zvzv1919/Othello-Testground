@@ -1,0 +1,2 @@
+1. in search, get moves gets called duplicatively (in is_game_over and main body), can optimize
+2. board can be passed by ref.

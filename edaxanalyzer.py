@@ -81,18 +81,18 @@ def extract_scores(solution_file):
 
     return scores
 
-def obf_generator(q, process_cnt, empties):
+def obf_generator(q, state_cnt, empties):
     """
         Generate obf states and batch write to a queue.
         :param empties: number of empties
-        :param process_cnt: number of states to generate
+        :param state_cnt: number of states to generate
         :param q: mp/mt queue
         :return:
     """
     result = []
     batch_cnt = 0
-    # print(process_cnt)
-    for _ in range(process_cnt):
+    # print(state_cnt)
+    for _ in range(state_cnt):
 
         arr = np.array(['-'] * BOARD_SIZE)
         indices = np.random.choice(64, size=(BOARD_SIZE - empties), replace=False)
@@ -190,7 +190,7 @@ def analyze_obf_entry(obf_entry, lvl):
     print(analyze["score"])
 
 if __name__ == '__main__':
-    random_obf(21, 100000, "data/21_100k_20240512/obf")
+    random_obf(2, 100000, "data/2_100k_20250817/obf")
 
     # extract_scores("a.txt")
     # analyze_obf_entry("X-OOOOXOO--OO--OX-XOXXXXXO--XO-OOOX---OO--OO-OOOXXOOOOXXXOXXO-XX X;", 16)
