@@ -190,7 +190,7 @@ def analyze_obf_entry(obf_entry, lvl):
     print(analyze["score"])
 
 if __name__ == '__main__':
-    random_obf(2, 100000, "data/2_100k_20250817/obf")
+    random_obf(12, 100, "data/test/obf")
 
     # extract_scores("a.txt")
     # analyze_obf_entry("X-OOOOXOO--OO--OX-XOXXXXXO--XO-OOOX---OO--OO-OOOXXOOOOXXXOXXO-XX X;", 16)

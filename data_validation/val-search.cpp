@@ -252,6 +252,7 @@ int main(int argc, char* argv[]) {
     
     std::cout << "Processing OBF file: " << obf_file_path << std::endl;
     std::cout << "Game#\tPlayer_Discs\tOpponent_Discs\tEmpty\tFinal_Score" << std::endl;
+    std::cout.flush(); // Ensure headers appear immediately
     
     while (std::getline(file, line)) {
         game_count++;
@@ -279,6 +280,13 @@ int main(int argc, char* argv[]) {
         
         std::cout << game_count << "\t" << player_discs << "\t\t" << opponent_discs 
                   << "\t\t" << empty_squares << "\t" << final_score_result << std::endl;
+        std::cout.flush(); // Force output to appear immediately
+        
+        // Show progress every 1000 games
+        if (game_count % 1000 == 0) {
+            std::cerr << "Progress: Processed " << game_count << " games..." << std::endl;
+            std::cerr.flush();
+        }
     }
     
     file.close();
